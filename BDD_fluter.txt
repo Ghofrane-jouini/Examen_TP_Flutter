@@ -1,0 +1,149 @@
+CREATE DATABASE IF NOT EXISTS scolarite_abs
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE scolarite_abs;
+
+DROP TABLE IF EXISTS absence;
+DROP TABLE IF EXISTS etudiant;
+DROP TABLE IF EXISTS classe;
+DROP TABLE IF EXISTS departement;
+DROP TABLE IF EXISTS matiere;
+
+CREATE TABLE departement (
+  cod_dept INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nom_dept VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE classe (
+  cod_class INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nom_class VARCHAR(50) NOT NULL,
+  nbr_etud INT DEFAULT 0,
+  cod_dept INT NOT NULL
+);
+
+CREATE TABLE etudiant (
+  nce VARCHAR(20) NOT NULL PRIMARY KEY,
+  nom VARCHAR(50) NOT NULL,
+  prenom VARCHAR(50) NOT NULL,
+  date_nais DATE DEFAULT NULL,
+  lieu_nais VARCHAR(50) DEFAULT NULL,
+  cod_class INT NOT NULL
+);
+
+CREATE TABLE matiere (
+  cod_mat VARCHAR(20) NOT NULL PRIMARY KEY,
+  int_mat VARCHAR(100) NOT NULL,
+  description VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE absence (
+  cod_mat VARCHAR(20) NOT NULL,
+  nce VARCHAR(20) NOT NULL,
+  date_a DATE NOT NULL,
+  nha DECIMAL(4,1) NOT NULL,
+  PRIMARY KEY (cod_mat, nce, date_a)
+);
+
+INSERT INTO departement (cod_dept, nom_dept) VALUES
+(1, 'TI'),
+(2, 'GM');
+
+INSERT INTO classe (cod_class, nom_class, nbr_etud, cod_dept) VALUES
+(1, 'DSI33', 2, 1),
+(2, 'DSI31', 1, 1),
+(3, 'GM11', 1, 2);
+
+INSERT INTO etudiant (nce, nom, prenom, date_nais, lieu_nais, cod_class) VALUES
+('E1', 'Ben Foulen1', 'Foulen1', '2002-05-14', 'Tunis', 1),
+('E2', 'Trabelsi', 'Amira', '2001-11-02', 'Sfax', 1),
+('E3', 'Gharbi', 'Youssef', '2002-03-21', 'Sousse', 2),
+('E4', 'Mansouri', 'Ines', '2002-07-09', 'Tunis', 3);
+
+INSERT INTO matiere (cod_mat, int_mat, description) VALUES
+('AFCP', 'Framework cross-platform', NULL),
+('MOB', 'Développement mobile', NULL),
+('SOA', 'Architecture orientée services', NULL);
+
+INSERT INTO absence (cod_mat, nce, date_a, nha) VALUES
+('AFCP', 'E1', '2025-10-04', 4.5),
+('AFCP', 'E1', '2025-11-11', 1.5),
+('SOA', 'E1', '2025-10-16', 3.0),
+('SOA', 'E1', '2025-10-20', 1.5),
+('SOA', 'E1', '2025-10-23', 3.0);
+Yomna
+CREATE DATABASE IF NOT EXISTS scol_a7
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE scol_a7;
+
+DROP TABLE IF EXISTS etudiant;
+DROP TABLE IF EXISTS classe;
+DROP TABLE IF EXISTS formation;
+DROP TABLE IF EXISTS enseignant;
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE classe (
+  cod_class INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nbre_etud INT DEFAULT NULL,
+  nom_class VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE enseignant (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  matiere VARCHAR(255) DEFAULT NULL,
+  nom VARCHAR(255) DEFAULT NULL,
+  prenom VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE formation (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  duree INT NOT NULL,
+  nom VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE etudiant (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  date_nais DATE DEFAULT NULL,
+  nom VARCHAR(255) DEFAULT NULL,
+  prenom VARCHAR(255) DEFAULT NULL,
+  classe_cod_class INT DEFAULT NULL,
+  formation_id BIGINT DEFAULT NULL,
+  FOREIGN KEY (classe_cod_class) REFERENCES classe (cod_class),
+  FOREIGN KEY (formation_id) REFERENCES formation (id)
+);
+
+CREATE TABLE user (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(100) DEFAULT NULL,
+  password VARCHAR(255) DEFAULT NULL,
+  UNIQUE KEY uk_user_email (email)
+);
+
+INSERT INTO classe (cod_class, nbre_etud, nom_class) VALUES
+(1, 5, 'DSI31'),
+(2, 5, 'DSI33'),
+(3, 0, 'DSI21');
+
+INSERT INTO enseignant (id, matiere, nom, prenom) VALUES
+(1, 'Flutter', 'Ben Salah', 'Mohamed'),
+(2, 'Spring Boot', 'Karray', 'Leila'),
+(3, 'Base de données', 'Bouazizi', 'Hichem');
+
+INSERT INTO formation (id, duree, nom) VALUES
+(1, 6, 'Développement mobile'),
+(2, 6, 'Développement web'),
+(3, 4, 'Base de données');
+
+INSERT INTO etudiant (id, date_nais, nom, prenom, classe_cod_class, formation_id) VALUES
+(1, '2002-05-14', 'Ben Ali', 'Sami', 1, 1),
+(2, '2001-11-02', 'Trabelsi', 'Amira', 1, 2),
+(3, '2002-03-21', 'Gharbi', 'Youssef', 1, 1),
+(4, '2002-07-09', 'Mansouri', 'Ines', 1, 3),
+(5, '2001-12-30', 'Jebali', 'Omar', 1, 2),
+(6, '2002-01-17', 'Khemiri', 'Salma', 2, 1),
+(7, '2002-09-05', 'Bouzid', 'Mehdi', 2, 2),
+(8, '2001-08-25', 'Hamdi', 'Nour', 2, 1),
+(9, '2002-04-12', 'Saidi', 'Rania', 2, 3),
+(10, '2001-10-08', 'Chaabane', 'Karim', 2, 2);
+
+INSERT INTO user (id, email, password) VALUES
+(1, 'admin@gmail.com', 'admin'),
+(2, 'foulen@gmail.com', 'foulen');
